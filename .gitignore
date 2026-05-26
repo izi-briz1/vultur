@@ -6,3 +6,6 @@ vendor/
 /runtime/compiled/*
 !/runtime/cache/.gitkeep
 !/runtime/compiled/.gitkeep
+
+/public/assets/*.css
+/public/assets/*.css.map
