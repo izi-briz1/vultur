@@ -1,28 +1,15 @@
 <?php declare(strict_types=1);
 
-require __DIR__ . '/../vendor/autoload.php';
+use App\Database;
 
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
-$dotenv->load();
+require __DIR__ . '/../bootstrap.php';
 
-$host = $_ENV['DB_HOST'];
-$port = $_ENV['DB_PORT'];
-$name = $_ENV['DB_NAME'];
-$user = $_ENV['DB_USER'];
-$pass = $_ENV['DB_PASS'];
+$config = require __DIR__ . '/../config/db.php';
 
 try {
-    $pdo = new PDO(
-        "mysql:host={$host};port={$port};dbname={$name};charset=utf8mb4",
-        $user,
-        $pass,
-        [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-            PDO::ATTR_EMULATE_PREPARES => false,
-        ]
-    );
-} catch (PDOException $e) {
-    echo 'Cannot connect to database: '. $e->getMessage(). PHP_EOL;
+    $pdo = Database::create($config);
+} catch (Throwable $t) {
+    echo 'Cannot connect to database: '. $t->getMessage(). PHP_EOL;
     exit(1);
 }
 
@@ -58,7 +45,12 @@ foreach ($files as $file) {
 
     try {
         $pdo->exec($sql);
-        $stmt = $pdo->prepare("INSERT INTO migrations (name) VALUES (?)");
+        $stmt = $pdo->prepare('
+            INSERT INTO migrations
+                (name)
+            VALUES
+                (?)
+        ');
         $stmt->execute([$name]);
         echo 'OK'. PHP_EOL;
         $newCount++;
