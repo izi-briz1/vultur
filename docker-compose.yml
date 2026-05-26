@@ -1,0 +1,50 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: vultur_app
+    restart: unless-stopped
+    volumes:
+      - .:/var/www/html
+    networks:
+      - vultur_net
+    depends_on:
+      - db
+
+  nginx:
+    image: nginx:alpine
+    container_name: vultur_nginx
+    restart: unless-stopped
+    ports:
+      - "8081:80"
+    volumes:
+      - .:/var/www/html
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - vultur_net
+    depends_on:
+      - app
+
+  db:
+    image: mariadb:10.11
+    container_name: vultur_db
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-rootpassword}
+      MARIADB_DATABASE: ${DB_DATABASE:-vultur}
+      MARIADB_USER: ${DB_USERNAME:-vultur}
+      MARIADB_PASSWORD: ${DB_PASSWORD:-vultur}
+    ports:
+      - "3307:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - vultur_net
+
+volumes:
+  db_data:
+
+networks:
+  vultur_net:
+    driver: bridge
