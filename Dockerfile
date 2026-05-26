@@ -27,10 +27,6 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/html
 
-COPY . .
-
-RUN composer install --no-dev --optimize-autoloader 2>/dev/null || true
-
 RUN chown -R www-data:www-data /var/www/html
 
 EXPOSE 9000
