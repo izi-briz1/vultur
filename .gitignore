@@ -3,7 +3,7 @@
 vendor/
 
 /runtime/cache/*
-/runtime/compiled/*
+/runtime/compile/*
 !/runtime/cache/.gitkeep
 !/runtime/compiled/.gitkeep
 
