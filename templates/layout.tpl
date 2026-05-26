@@ -1,20 +1,17 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
     <title>
         {block name="title"}
             Сайт
         {/block}
     </title>
-    {block name="head"}
-        <link rel="stylesheet" href="/style.css">
-    {/block}
+    <link rel="stylesheet" href="/assets/app.css">
 </head>
 <body>
 <header>
     {block name="header"}
-        <h1>Мой сайт</h1>
-        <nav><a href="/">Главная</a> | <a href="/about">О нас</a></nav>
+        <h1><a href="/">Блог</a></h1>
     {/block}
 </header>
 
