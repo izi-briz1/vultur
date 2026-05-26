@@ -15,11 +15,30 @@ final class CategoryController
 
     public function index(): string
     {
-        return __METHOD__;
+        $categories = $this->categoryRepository->findWithLatestArticles(3);
+
+        return $this->view->render('index.tpl', [
+            'categories' => $categories,
+        ]);
     }
 
     public function show($id): string
     {
-        return __METHOD__;
+        $category = $this->categoryRepository->findById($id);
+
+        if(empty($category)){
+            http_response_code(404);
+            return '404 Not Found';
+        }
+
+        $data = $this->categoryRepository->findCategoryArticles($category,
+            $_GET['sort'] ?? '',
+            $_GET['order'] ?? '',
+            $_GET['page'] ?? '',
+            10
+        );
+        $data['category'] = $category;
+
+        return $this->view->render('category.tpl', $data);
     }
 }
