@@ -15,6 +15,18 @@ final class ArticleController
 
     public function show($id): string
     {
-        return __METHOD__;
+        $article = $this->articleRepository->findById($id);
+
+        if(empty($article)){
+            http_response_code(404);
+            exit(1);
+        }
+
+        $similar = $this->articleRepository->findSimilarArticles($article);
+
+        return $this->view->render('article.tpl', [
+            'article' => $article,
+            'similar' => $similar,
+        ]);
     }
 }
