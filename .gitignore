@@ -1,5 +1,8 @@
 .env
 .idea/
 vendor/
-node_modules/
-*.log
+
+/runtime/cache/*
+/runtime/compiled/*
+!/runtime/cache/.gitkeep
+!/runtime/compiled/.gitkeep
